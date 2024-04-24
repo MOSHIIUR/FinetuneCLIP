@@ -1,0 +1,8 @@
+torch
+transformers[torch]
+datasets
+wandb
+numpy
+requests
+matplotlib
+pillow
