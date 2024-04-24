@@ -19,14 +19,22 @@ def load_and_shuffle_dataset():
 # Preprocess data
 def preprocess_data(dataset):
     """Preprocess the dataset using the CLIP processor."""
+    # Preprocess data
     processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+    inputs = processor(text=dataset['text'], images=dataset['image'], return_tensors="pt", padding=True)
     max_length = 2048
+    max_length = min(
+        inputs["input_ids"].shape[1],
+        max_length,
+    )
     tokenized_dataset = dataset.map(
         lambda inputs: processor(text=inputs['text'], images=inputs['image'], padding='max_length', return_tensors="pt", max_length=max_length , truncation=True),
         batched=True,
         batch_size=16,
         drop_last_batch=True
     )
+
+
     return tokenized_dataset
 
 # Split dataset
